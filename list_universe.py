@@ -23,9 +23,19 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import apt  # python3-apt in Ubuntu
-import distro  # python3-distro in Ubuntu
 
-if distro.name() == "Ubuntu":
+try:
+    import distro  # python3-distro
+
+    distribution = distro.name()
+except ImportError:
+    # python3-distro is only available in 18.04 onwards, but there is an alternative that works
+    # before Python 3.8 (which is the default in Focal)
+    import platform
+
+    distribution = platform.linux_distribution()[0]  # deprecated and removed in Python 3.8+
+
+if distribution == "Ubuntu":
     cache = apt.Cache()
     package_count = 0
 
